@@ -21,17 +21,13 @@ class Form implements Element {
     }
 
     public function render(){
-        echo "<form action=\"{$this->action}\" method=\"{$this->method}\">
-                <fieldset>
-                   <center>";
+        echo "<form action=\"{$this->action}\" method=\"{$this->method}\">";
       
         foreach ($this->elements as $i) {
             $this->createField($i);            
         }
                 
-        echo "     </center> 
-                </fieldset>  
-                </form>";
+        echo "</form>";
     }
 
     private function createField($element){
@@ -46,6 +42,16 @@ class Form implements Element {
             
             case 'text':
                 echo "{$element['content']}<br>\n";
+                break;
+
+            case 'fieldset':
+                echo "<fieldset><br>
+                        <center>\n";
+                break;
+            
+            case 'endFieldset':
+                echo "  </center><br>
+                     </fieldset><br>\n";
                 break;
         }
     }
