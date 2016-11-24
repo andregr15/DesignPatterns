@@ -3,17 +3,20 @@ namespace AGR\Elements;
 use AGR\Interfaces\Element;
 use AGR\Validator\Validator;
 
+
 class Form implements Element {
     private $action;
     private $method;
     private $elements;
     private $validator;
+    private $fieldFacade;
     
     function __construct($action, $method, Validator $validator){
         $this->action = $action;
         $this->method = $method;
         $elements = array();
         $this->validator = $validator;
+        $this->fieldFacade = new FieldFacade();
     }
 
     public function add($element){
@@ -31,29 +34,11 @@ class Form implements Element {
     }
 
     private function createField($element){
-        switch($element['class']){
-            case 'textarea':
-                echo "<textarea name=\"{$element['name']}\" rows=\"{$element['rows']}\" cols=\"{$element['cols']}\">{$element['content']}</textarea><br>\n";
-                break;
-            
-            case 'input':
-                echo "<input type=\"{$element['type']}\" name=\"{$element['name']}\" value=\"{$element['value']}\" /><br>\n";
-                break;
-            
-            case 'text':
-                echo "{$element['content']}<br>\n";
-                break;
+        return $this->fieldFacade->createField($element);
+    }
 
-            case 'fieldset':
-                echo "<fieldset><br>
-                        <center>\n";
-                break;
-            
-            case 'endFieldset':
-                echo "  </center><br>
-                     </fieldset><br>\n";
-                break;
-        }
+     public function populate($dados){
+        $this->elements = $this->fieldFacade->populate($dados, $this->validator);
     }
 }
 
