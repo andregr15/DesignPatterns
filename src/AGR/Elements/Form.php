@@ -20,6 +20,9 @@ class Form implements Element {
     }
 
     public function add($element){
+        if(!is_array($element)){
+            throw new \InvalidArgumentException ('Parâmetro $element deve ser um array!');
+        }
         $this->elements[] = $element;
     }
 
@@ -38,6 +41,9 @@ class Form implements Element {
     }
 
      public function populate($dados){
+         if(!is_array($dados)){
+            throw new \InvalidArgumentException ('Parâmetro $dados deve ser um array!');
+        }
         $this->elements = $this->fieldFacade->populate($dados, $this->validator);
     }
 }
