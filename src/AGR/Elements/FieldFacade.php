@@ -53,6 +53,9 @@ class FieldFacade{
 
                 echo '</select>';
                 break;
+            default:
+                echo '';
+            break;
         }
     }
 
