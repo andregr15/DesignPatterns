@@ -4,6 +4,8 @@ namespace AGR\Validator;
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
+    private $validator;
+
     private function getRequestMock(){
         return $this->getMockBuilder('\AGR\Request\Request')->getMock();
     }
@@ -12,11 +14,22 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         return new \AGR\Validator\Validator($this->getRequestMock());
     }
 
-    public function testClassType(){
+    protected function setUp(){
+        $request = new \AGR\Request\Request();
+        $this->validator = new \AGR\Validator\Validator($request);
+    }
+
+    protected function tearDown(){
+        $this->validator = null;
+    }
+
+    //=========================== testes unitários =====================================================================================
+
+    public function testClassTypeUnitario(){
         $this->assertInstanceOf("AGR\Validator\Validator", $this->getValidator());
     }
 
-    public function testValidateMethod(){
+    public function testValidateMethodUnitario(){
         $dados = array(
             'nome'=>'produto teste',
             'valor'=>'100.00'
@@ -29,7 +42,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->assertEmpty($errors);
     }
 
-    public function testValidateMissingNome(){
+    public function testValidateMissingNomeUnitario(){
         $dados = array(
             'valor'=>'100.00',
         );
@@ -41,7 +54,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($errors, array(array('class' => 'li', 'value' => 'nome não inicializado!', 'field' => 'nome')));
     }
 
-     public function testValidateMissingValor(){
+     public function testValidateMissingValorUnitario(){
         $dados = array(
             'nome' => 'teste',
         );
@@ -53,7 +66,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($errors, array(array('class' => 'li', 'value' => 'valor não inicializado!', 'field' => 'valor')));
     }
 
-    public function testValidateNomeTooLong(){
+    public function testValidateNomeTooLongUnitario(){
         $dados = array(
             'nome' => 'produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste',
             'valor'=>'100.00',
@@ -66,7 +79,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($errors, array(array('class' => 'li', 'value' => 'nome maior que 200 caracteres!', 'field' => 'nome')));
     }
 
-     public function testValidateValorNotNumber(){
+     public function testValidateValorNotNumberUnitario(){
         $dados = array(
             'nome' => 'teste',
             'valor' => 'a'
@@ -78,6 +91,66 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals($errors, array(array('class' => 'li', 'value' => 'valor não é numérico!', 'field' => 'valor')));
     }
+
+    //============================== testes funcionais ==================================================================================
+
+    public function testClassTypeFuncional(){
+        $this->assertInstanceOf("AGR\Validator\Validator", $this->validator);
+    }
+
+    public function testValidateMethodFuncional(){
+        $dados = array(
+            'nome'=>'produto teste',
+            'valor'=>'100.00'
+        );
+    
+       $errors = $this->validator->validate($dados);
+
+        $this->assertEmpty($errors);
+    }
+
+    public function testValidateMissingNomeFuncional(){
+        $dados = array(
+            'valor'=>'100.00',
+        );
+    
+        $errors = $this->validator->validate($dados);
+
+        $this->assertEquals($errors, array(array('class' => 'li', 'value' => 'nome não inicializado!', 'field' => 'nome')));
+    }
+
+     public function testValidateMissingValorFuncional(){
+        $dados = array(
+            'nome' => 'teste',
+        );
+
+        $errors = $this->validator->validate($dados);
+
+        $this->assertEquals($errors, array(array('class' => 'li', 'value' => 'valor não inicializado!', 'field' => 'valor')));
+    }
+
+    public function testValidateNomeTooLongFuncional(){
+        $dados = array(
+            'nome' => 'produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste produto teste',
+            'valor'=>'100.00',
+        );
+
+        $errors = $this->validator->validate($dados);
+
+        $this->assertEquals($errors, array(array('class' => 'li', 'value' => 'nome maior que 200 caracteres!', 'field' => 'nome')));
+    }
+
+     public function testValidateValorNotNumberFuncional(){
+        $dados = array(
+            'nome' => 'teste',
+            'valor' => 'a'
+        );
+
+        $errors = $this->validator->validate($dados);
+
+        $this->assertEquals($errors, array(array('class' => 'li', 'value' => 'valor não é numérico!', 'field' => 'valor')));
+    }
+
 
 }
 
