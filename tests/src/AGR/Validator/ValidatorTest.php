@@ -150,8 +150,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals($errors, array(array('class' => 'li', 'value' => 'valor não é numérico!', 'field' => 'valor')));
     }
-
-
 }
 
 
